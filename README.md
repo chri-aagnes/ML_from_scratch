@@ -1,0 +1,1 @@
+This is my implementation of (feed forward) neural networks from scratch. The point is to learn how some of these technologies work under the hood! The reach goal is to code my own transformer. This is going to be challenging ;))
