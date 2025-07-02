@@ -1,10 +1,19 @@
 import numpy as np
 import prefetch
 
-# Create batch: shape (batch_size, feature_size)
-batch = np.random.randn(8, 1024).astype(np.float32)
+X = np.random.randn(8, 1024).astype(np.float32)
+y = np.random.randint(0, 10, size=(8,), dtype=np.int32)
 
-# Call the C++ function
-prefetch.process_batch(batch)
+print("X before processing:")
+print(X)
 
-print(batch[0, 0])  # Should be >= 0 due to ReLU
+# call function 
+prefetch.process_batch(X, y)
+
+print("\nX after processing (should have ReLU applied):")
+print(X)
+
+# Check that no value is negative
+assert np.all(X >= 0), "ReLU failed: X contains negative values"
+
+print("\nprefetch is working correctly!")
