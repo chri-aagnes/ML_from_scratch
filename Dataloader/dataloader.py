@@ -5,7 +5,7 @@ Input:
 '''
 
 class Dataloader: 
-    def __init__(self, X, y, batch_size, shuffle=False, scale=False, normalize=False): 
+    def __init__(self, X, y, batch_size, shuffle=False, scale=False, normalize=False, transformations=None): 
         if shuffle: 
             self.X = self.shuffle_data(X)
         else: 
@@ -20,7 +20,8 @@ class Dataloader:
     def shuffle_data(self, dataset): 
         pass 
 
-    def custom_data_transformations(self): 
-        pass 
-    
+    def custom_data_transformations(self): # list 
+        pass
+
+
     
