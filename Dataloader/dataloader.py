@@ -1,11 +1,11 @@
 '''
 Dataloader class (non-thought out template code!!)
 
-The main functions this dataloader class needs to support is batching, shuffling of data, and data transformations. 
+Input: 
 '''
 
 class Dataloader: 
-    def __init__(self, X, y, batch_size, shuffle=False): 
+    def __init__(self, X, y, batch_size, shuffle=False, scale=False, normalize=False): 
         if shuffle: 
             self.X = self.shuffle_data(X)
         else: 
@@ -23,4 +23,4 @@ class Dataloader:
     def custom_data_transformations(self): 
         pass 
     
-
+    
