@@ -56,13 +56,11 @@ class Dataloader:
             
             batched_data.append((self.X[start:end], self.y[0][start:end]))
 
-            """
-            if self.prefetch: # call prefetch.cpp
-                prefetch.process_batch(X_batch, y_batch) 
-                yield X_batch, y_batch
-            else: # store batches without prefetching
-                pass
-            """
+            # if self.prefetch: # call prefetch.cpp
+            #     prefetch.process_batch(X_batch, y_batch) 
+            #     yield X_batch, y_batch
+            # else: # store batches without prefetching
+            #     pass
 
         return batched_data
 
@@ -77,13 +75,12 @@ if __name__=="__main__":
     
     test = Dataloader(X, y, batch_size=3, prefetch=True, shuffle=False, transformations=[])
     
-    #print("")
-    #print(X)
-    #print(test.X, "\n")
+    # print("")
+    # print(X)
+    # print(test.X, "\n")
 
-    print(y)
-    print(y[0:2])
-    print(test.y, "\n")
+    # print(y)
+    # print(test.y, "\n")
 
     print("")
     print(test.batches)
