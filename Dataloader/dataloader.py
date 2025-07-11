@@ -8,6 +8,7 @@ batch_size: number of data points used for gradient updates, defaults to 1. Note
 
 import prefetch
 import numpy as np
+from math import floor
 
 
 class Dataloader: 
@@ -24,7 +25,7 @@ class Dataloader:
         if transformations: 
             self.X = self.custom_data_transformations()
 
-        self.batch_data()
+        self.X_batches, self.y_batches = self.batch_data()
         
 
     def shuffle_data(self): 
@@ -45,26 +46,38 @@ class Dataloader:
 
 
     def batch_data(self): 
-        assert 1 <= self.batch_size <= len(self.X), "The batch size needs to be a positive integer between 1 and the length of the dataset (inclusive)."
-        for start in range(0, len(self.X), self.batch_size): # drops remaining data samples
+        assert 1 <= self.batch_size <= self.X.shape[0], "The batch size needs to be a positive integer between 1 and the length of the dataset (inclusive)."
+        X_batches, y_batches = {}, {}
+        ind = 0
+        for start in range(0, self.X.shape[0], self.batch_size): # drops remaining data samples
             end = start + self.batch_size 
-            X_batch = self.X[start:end]
-            y_batch = self.y[start:end]
+            if end >= self.X.shape[0]:
+                break 
+            print("start", start, "end", end)
 
+            X_batches[ind] = self.X[start:end]
+            y_batches[ind] = self.y[start:end]
+            ind += 1
+
+            """
             if self.prefetch: # call prefetch.cpp
                 prefetch.process_batch(X_batch, y_batch) 
                 yield X_batch, y_batch
             else: # store batches without prefetching
                 pass
-
+            """
+        return X_batches, y_batches
 
 if __name__=="__main__":
-    X = np.array([[1, 2, 3, 4, 5], [-10, -20, -30, -40, -50]])
+    X = np.array([[1, 2, 3, 4, 5], [-10, -20, -30, -40, -50], 
+                  [1, 2, 3, 4, 5], [-10, -20, -30, -40, -50]])
     y = np.array([15, 25, 35, 45, 55])
-    def myfunc(x):
+    def add2(x):
         return x+2
+    def del3(x):
+        return x-3
     
-    test = Dataloader(X, y, batch_size=2, prefetch=True, shuffle=True, transformations=[myfunc])
+    test = Dataloader(X, y, batch_size=2, prefetch=True, shuffle=False, transformations=[])
     
     print("")
     print(X)
@@ -73,4 +86,6 @@ if __name__=="__main__":
     print(y)
     print(test.y, "\n")
 
-    #print(test.X_batch)
+    print("")
+    print(test.X_batches)
+    print(test.y_batches)
