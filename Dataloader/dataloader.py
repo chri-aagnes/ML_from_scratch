@@ -25,7 +25,7 @@ class Dataloader:
         if transformations: 
             self.X = self.custom_data_transformations()
 
-        self.X_batches, self.y_batches = self.batch_data()
+        self.batches = self.batch_data()
         
 
     def shuffle_data(self): 
@@ -47,17 +47,14 @@ class Dataloader:
 
     def batch_data(self): 
         assert 1 <= self.batch_size <= self.X.shape[0], "The batch size needs to be a positive integer between 1 and the length of the dataset (inclusive)."
-        X_batches, y_batches = {}, {}
-        ind = 0
+        
+        batched_data = []
         for start in range(0, self.X.shape[0], self.batch_size): # drops remaining data samples
             end = start + self.batch_size 
-            if end >= self.X.shape[0]:
+            if end > self.X.shape[0]:
                 break 
-            print("start", start, "end", end)
-
-            X_batches[ind] = self.X[start:end]
-            y_batches[ind] = self.y[start:end]
-            ind += 1
+            
+            batched_data.append((self.X[start:end], self.y[0][start:end]))
 
             """
             if self.prefetch: # call prefetch.cpp
@@ -66,7 +63,8 @@ class Dataloader:
             else: # store batches without prefetching
                 pass
             """
-        return X_batches, y_batches
+
+        return batched_data
 
 if __name__=="__main__":
     X = np.array([[1, 2, 3, 4, 5], [-10, -20, -30, -40, -50], 
@@ -77,15 +75,17 @@ if __name__=="__main__":
     def del3(x):
         return x-3
     
-    test = Dataloader(X, y, batch_size=2, prefetch=True, shuffle=False, transformations=[])
+    test = Dataloader(X, y, batch_size=3, prefetch=True, shuffle=False, transformations=[])
     
-    print("")
-    print(X)
-    print(test.X, "\n")
+    #print("")
+    #print(X)
+    #print(test.X, "\n")
 
     print(y)
+    print(y[0:2])
     print(test.y, "\n")
 
     print("")
-    print(test.X_batches)
-    print(test.y_batches)
+    print(test.batches)
+
+    print("")
